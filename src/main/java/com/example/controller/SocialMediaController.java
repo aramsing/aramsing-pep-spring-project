@@ -47,33 +47,36 @@ public class SocialMediaController {
 
     @PostMapping("messages") //3
     public ResponseEntity<Message> createMessage(@RequestBody Message newMessage) {
-        messageService.createMessage(newMessage);
-        return ResponseEntity.status(HttpStatus.OK).body(newMessage);
+        Message message = messageService.createMessage(newMessage);
+        if (message == null) {
+            return ResponseEntity.status(400).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @GetMapping("messages") //4
+    @GetMapping("messages") //DONE
     public List<Message> getAllMessages() {
         return messageService.getAllMessages();
     }
 
     @GetMapping("messages/{message_id}") //5
-    public ResponseEntity<Message> findMessageById(@PathVariable int message_id) {
+    public ResponseEntity<Message> findMessageById(@RequestBody int message_id) {
         return null;
     }
 
     @DeleteMapping("messages/{message_id}") //6
-    public ResponseEntity<Message> deleteMessageById(@PathVariable int message_id) {
+    public ResponseEntity<Message> deleteMessageById(@RequestBody int message_id) {
         return null;
     }
 
     @PatchMapping("messages/{message_id}") //7
-    public ResponseEntity<Message> updateMessageById(@PathVariable int message_id, @RequestParam Message message) {
+    public ResponseEntity<Message> updateMessageById(@RequestBody int message_id, @RequestBody Message message) {
         messageService.updateMessageById(message_id, message);
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
     
     @GetMapping("accounts/{account_id}/messages") //8
-    public ResponseEntity<List<Message>> getAllMessagesByAccountId(@PathVariable int account_id) {
+    public ResponseEntity<List<Message>> getAllMessagesByAccountId(@RequestBody int account_id) {
         return null;
     }
 }

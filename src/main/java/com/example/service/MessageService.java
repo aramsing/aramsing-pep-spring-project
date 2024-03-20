@@ -25,13 +25,16 @@ public class MessageService {
     //public List<Message> getAllMessagesByAccountId(int posted_by) {}
 
     public Message createMessage(Message message) {
+        if ((message.getMessage_text() == "") || (message.getMessage_text().length() > 255)) {
+            return null;
+        }
         return messageRepository.save(message);
     }
 
-    public Message updateMessageById(int message_id, Message message) {
-        Message updatedMessage = messageRepository.findById(message.getMessage_text()).orElseThrow(()->new ResourceNotFoundException(message + " was not found. Please try another message."));
+    public Message updateMessageById(int message_id, Message message) throws ResourceNotFoundException {
+        Message updatedMessage = messageRepository.findById(message.getMessage_text()).orElseThrow(()->new ResourceNotFoundException("message not found"));
         return messageRepository.save(updatedMessage);
     }
 
-    //public void deleteMessageById(int message_id) {}
+    //public void deleteMessageById(Message message) {}
 }
