@@ -31,7 +31,7 @@ public class SocialMediaController {
     public ResponseEntity<Account> registerAccount(@RequestBody Account newAccount) {
         accountService.registerAccount(newAccount);
         if (newAccount == null) {
-            return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(newAccount);
     }
@@ -49,7 +49,7 @@ public class SocialMediaController {
     public ResponseEntity<Message> createMessage(@RequestBody Message newMessage) {
         Message message = messageService.createMessage(newMessage);
         if (message == null) {
-            return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }

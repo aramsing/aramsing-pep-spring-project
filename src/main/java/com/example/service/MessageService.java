@@ -20,12 +20,16 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
-    //public Message findMessageById(int message_id) {}
+    public Message findMessageById(int message_id) {
+        return null;
+    }
 
-    //public List<Message> getAllMessagesByAccountId(int posted_by) {}
+    public List<Message> getAllMessagesByAccountId(int posted_by) {
+        return null;
+    }
 
     public Message createMessage(Message message) {
-        if ((message.getMessage_text() == "") || (message.getMessage_text().length() > 255)) {
+        if ((message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255) || (message.getPosted_by() == null)) {
             return null;
         }
         return messageRepository.save(message);
@@ -36,5 +40,7 @@ public class MessageService {
         return messageRepository.save(updatedMessage);
     }
 
-    //public void deleteMessageById(Message message) {}
+    public Message deleteMessageById(Message message) {
+        return null;
+    }
 }
