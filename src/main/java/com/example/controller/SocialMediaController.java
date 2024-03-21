@@ -38,13 +38,14 @@ public class SocialMediaController {
         }
     }
 
-    @PostMapping("login") //2
+    @PostMapping("login") //DONE
     public ResponseEntity<Account> loginAccount(@RequestBody Account account) throws AuthenticationException {
-        Account loggedinAccount = accountService.loginAccount(account);
-        if (loggedinAccount == null) {
+        try {
+            Account loggedinAccount = accountService.loginAccount(account);
+            return ResponseEntity.status(HttpStatus.OK).body(loggedinAccount);
+        } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(account);
     }
 
     @PostMapping("messages") //3

@@ -28,6 +28,11 @@ public class AccountService {
     }
 
     public Account loginAccount(Account account) throws AuthenticationException {
-        return accountRepository.findByUsernameAndPassword(account.getUsername(), account.getPassword());
+        Account storedAccount = accountRepository.findByUsernameAndPassword(account.getUsername(), account.getPassword());
+        if(storedAccount == null) {
+            throw new AuthenticationException("Invalid account");
+        }
+        storedAccount.getAccount_id();
+        return storedAccount;
     }
 }
