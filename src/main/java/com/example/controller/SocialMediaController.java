@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.entity.*;
+import com.example.exception.DuplicateUsernameException;
 import com.example.service.*;
 import java.util.List;
 import javax.security.sasl.AuthenticationException;
@@ -27,13 +28,14 @@ public class SocialMediaController {
         this.messageService = messageService;
     }
 
-    @PostMapping("register") //1
+    @PostMapping("register") //DONE
     public ResponseEntity<Account> registerAccount(@RequestBody Account newAccount) {
-        accountService.registerAccount(newAccount);
-        if (newAccount == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        try {
+            Account registeredAccount = accountService.registerAccount(newAccount);
+            return ResponseEntity.status(HttpStatus.OK).body(registeredAccount);
+        } catch (DuplicateUsernameException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(newAccount);
     }
 
     @PostMapping("login") //2

@@ -3,17 +3,20 @@ package com.example.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import com.example.entity.Message;
 import com.example.exception.ResourceNotFoundException;
-import com.example.repository.MessageRepository;
+import com.example.repository.*;
 
 @Service
 public class MessageService {
     private MessageRepository messageRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository) {
+    public MessageService(MessageRepository messageRepository, AccountRepository accountRepository) {
         this.messageRepository = messageRepository;
+        this.accountRepository = accountRepository;
     }
 
     public List<Message> getAllMessages() {
@@ -28,16 +31,17 @@ public class MessageService {
         return null;
     }
 
-    public Message createMessage(Message message) {
-        if ((message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255) || (message.getPosted_by() == null)) {
+    public Message createMessage(Message message) throws ResourceNotFoundException {
+        if ((message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255)) {
             return null;
         }
+
+        //Optional<Message> optionalPostedByUser = accountRepository;
         return messageRepository.save(message);
     }
 
-    public Message updateMessageById(int message_id, Message message) throws ResourceNotFoundException {
-        Message updatedMessage = messageRepository.findById(message.getMessage_text()).orElseThrow(()->new ResourceNotFoundException("message not found"));
-        return messageRepository.save(updatedMessage);
+    public Message updateMessageById(int message_id, Message message) {
+        return messageRepository.save(message);
     }
 
     public Message deleteMessageById(Message message) {

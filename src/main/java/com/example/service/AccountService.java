@@ -5,6 +5,7 @@ import javax.security.sasl.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.entity.Account;
+import com.example.exception.DuplicateUsernameException;
 import com.example.repository.AccountRepository;
 
 @Service
@@ -16,9 +17,12 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public Account registerAccount(Account newAccount) {
+    public Account registerAccount(Account newAccount) throws DuplicateUsernameException {
         if ((newAccount.getUsername() == "") || (newAccount.getPassword().length() < 4)) {
             return null;
+        }
+        if (accountRepository.existsByUsername(newAccount.getUsername())) {
+            throw new DuplicateUsernameException("This username already exists.");
         }
         return accountRepository.save(newAccount);
     }
