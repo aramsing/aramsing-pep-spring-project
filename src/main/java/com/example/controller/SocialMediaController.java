@@ -33,7 +33,9 @@ public class SocialMediaController {
         try {
             Account registeredAccount = accountService.registerAccount(newAccount);
             return ResponseEntity.status(HttpStatus.OK).body(registeredAccount);
-        } catch (DuplicateUsernameException e) {
+        }
+        
+        catch (DuplicateUsernameException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
     }
@@ -43,7 +45,9 @@ public class SocialMediaController {
         try {
             Account loggedinAccount = accountService.loginAccount(account);
             return ResponseEntity.status(HttpStatus.OK).body(loggedinAccount);
-        } catch (AuthenticationException e) {
+        }
+        
+        catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
@@ -51,24 +55,29 @@ public class SocialMediaController {
     @PostMapping("messages") //3
     public ResponseEntity<Message> createMessage(@RequestBody Message newMessage) {
         Message message = messageService.createMessage(newMessage);
-        if (message == null) {
+        if ((message == null) || (message.getMessage_text() == null) || message.getMessage_text().isEmpty() || (message.getMessage_text().length() > 255)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
     @GetMapping("messages") //DONE
-    public List<Message> getAllMessages() {
-        return messageService.getAllMessages();
+    public ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> messages = messageService.getAllMessages();
+        return ResponseEntity.status(HttpStatus.OK).body(messages);
     }
 
     @GetMapping("messages/{message_id}") //5
-    public ResponseEntity<Message> findMessageById(@RequestBody int message_id) {
-        return null;
+    public ResponseEntity<Message> findMessageById(@PathVariable int message_id) {
+        Message message = messageService.findMessageById(message_id);
+        if (message == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
     @DeleteMapping("messages/{message_id}") //6
-    public ResponseEntity<Message> deleteMessageById(@RequestBody int message_id) {
+    public ResponseEntity<Message> deleteMessageById(@PathVariable int message_id) {
         return null;
     }
 

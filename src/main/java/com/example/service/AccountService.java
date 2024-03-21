@@ -21,17 +21,21 @@ public class AccountService {
         if ((newAccount.getUsername() == "") || (newAccount.getPassword().length() < 4)) {
             return null;
         }
+
         if (accountRepository.existsByUsername(newAccount.getUsername())) {
             throw new DuplicateUsernameException("This username already exists.");
         }
+
         return accountRepository.save(newAccount);
     }
 
     public Account loginAccount(Account account) throws AuthenticationException {
         Account storedAccount = accountRepository.findByUsernameAndPassword(account.getUsername(), account.getPassword());
-        if(storedAccount == null) {
+
+        if (storedAccount == null) {
             throw new AuthenticationException("Invalid account");
         }
+        
         storedAccount.getAccount_id();
         return storedAccount;
     }

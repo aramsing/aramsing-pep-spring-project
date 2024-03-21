@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import com.example.entity.Message;
+import com.example.exception.ResourceNotFoundException;
 import com.example.repository.*;
 
 @Service
@@ -28,14 +29,15 @@ public class MessageService {
     }
 
     public Message createMessage(Message message) {
-        if ((message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255) || (message.getPosted_by().toString().isEmpty())) {
+        if ((message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255)) {
             return null;
         }
         return messageRepository.save(message);
     }
 
-    public Message updateMessageById(int message_id, Message message) {
-        return messageRepository.save(message);
+    public Message updateMessageById(int message_id, Message message) throws ResourceNotFoundException {
+        Message updatedMessage = messageRepository.findById(message.getMessage_text()).orElseThrow(()->new ResourceNotFoundException("message not found"));
+        return messageRepository.save(updatedMessage);
     }
 
     public Message deleteMessageById(Message message) {
