@@ -55,7 +55,7 @@ public class SocialMediaController {
     @PostMapping("messages") //3
     public ResponseEntity<Message> createMessage(@RequestBody Message newMessage) {
         Message message = messageService.createMessage(newMessage);
-        if ((message == null) || (message.getMessage_text() == null) || message.getMessage_text().isEmpty() || (message.getMessage_text().length() > 255)) {
+        if (message == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(message);
@@ -68,7 +68,7 @@ public class SocialMediaController {
     }
 
     @GetMapping("messages/{message_id}") //5
-    public ResponseEntity<Message> findMessageById(@PathVariable int message_id) {
+    public ResponseEntity<Message> findMessageById(@RequestBody int message_id) {
         Message message = messageService.findMessageById(message_id);
         if (message == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -77,7 +77,7 @@ public class SocialMediaController {
     }
 
     @DeleteMapping("messages/{message_id}") //6
-    public ResponseEntity<Message> deleteMessageById(@PathVariable int message_id) {
+    public ResponseEntity<Message> deleteMessageById(@RequestBody int message_id) {
         return null;
     }
 
