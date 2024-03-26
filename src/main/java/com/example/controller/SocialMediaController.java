@@ -12,7 +12,6 @@ import java.util.List;
 import javax.security.sasl.AuthenticationException;
 
 /**
- * TODO: You will need to write your own endpoints and handlers for your controller using Spring.
  * The endpoints you will need can be found in readme.md as well as the test cases.
  * You be required to use the @GET/POST/PUT/DELETE/etc Mapping annotations
  * Where applicable as well as the @ResponseBody and @PathVariable annotations.
@@ -69,9 +68,9 @@ public class SocialMediaController {
     }
 
     @GetMapping("messages/{message_id}") //DONE
-    public ResponseEntity<Message> findMessageById(@PathVariable Integer message_id) {
+    public ResponseEntity<Message> getMessageById(@PathVariable Integer message_id) {
         try {
-            Message foundMessage = messageService.findMessageById(message_id);
+            Message foundMessage = messageService.getMessageById(message_id);
             return ResponseEntity.status(HttpStatus.OK).body(foundMessage);
         }
 
@@ -103,10 +102,6 @@ public class SocialMediaController {
     
     @GetMapping("accounts/{account_id}/messages") //8
     public ResponseEntity<List<Message>> getAllMessagesByAccountId(@PathVariable Integer account_id) {
-        List<Message> accountMessageList = messageService.getAllMessagesByAccountId(account_id);
-        if (accountMessageList == null) {
-            return null;
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(accountMessageList);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

@@ -20,35 +20,13 @@ public class MessageService {
         this.accountRepository = accountRepository;
     }
 
-    public List<Message> getAllMessages() {
-        return messageRepository.findAll();
-    }
-
-    public Message findMessageById(Integer message_id) throws ResourceNotFoundException {
-        return messageRepository.findById(message_id).orElseThrow(() -> new ResourceNotFoundException(message_id + " was not found."));
-    }
-
-    public List<Message> getAllMessagesByAccountId(int posted_by) {
-        if (posted_by == 0) {
-            return null;
-        }
-        List<Message> messages = messageRepository.findAll();
-        return messages;
-    }
-
     public Message createMessage(Message message) {
         Optional<Account> id = accountRepository.findById(message.getPosted_by());
+
         if ((message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255) || (id.isEmpty())) {
             return null;
         }
-        return messageRepository.save(message);
-    }
 
-    public Message updateMessageById(Integer message_id, Message message) {
-        Optional<Message> id = messageRepository.findById(message_id);
-        if ((message == null) || (message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255) || (id.isEmpty())) {
-            return null;
-        }
         return messageRepository.save(message);
     }
 
@@ -56,6 +34,29 @@ public class MessageService {
         if (message_id == null) {
             throw new Exception();
         }
+
         messageRepository.deleteById(message_id);
+    }
+
+    public List<Message> getAllMessagesByAccountId(Integer posted_by) {
+        return null;
+    }
+
+    public List<Message> getAllMessages() {
+        return messageRepository.findAll();
+    }
+
+    public Message getMessageById(Integer message_id) throws ResourceNotFoundException {
+        return messageRepository.findById(message_id).orElseThrow(() -> new ResourceNotFoundException(message_id + " was not found."));
+    }
+
+    public Message updateMessageById(Integer message_id, Message message) {
+        Optional<Message> id = messageRepository.findById(message_id);
+
+        if ((message == null) || (message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255) || (id.isEmpty())) {
+            return null;
+        }
+
+        return messageRepository.save(message);
     }
 }
