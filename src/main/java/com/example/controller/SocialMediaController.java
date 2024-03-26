@@ -30,10 +30,10 @@ public class SocialMediaController {
     }
 
     @PostMapping("register") //DONE
-    public ResponseEntity<Account> registerAccount(@RequestBody Account newAccount) {
+    public ResponseEntity<Account> registerAccount(@RequestBody Account account) {
         try {
-            Account registeredAccount = accountService.registerAccount(newAccount);
-            return ResponseEntity.status(HttpStatus.OK).body(registeredAccount);
+            Account newAccount = accountService.registerAccount(account);
+            return ResponseEntity.status(HttpStatus.OK).body(newAccount);
         }
         
         catch (DuplicateUsernameException e) {
@@ -54,12 +54,12 @@ public class SocialMediaController {
     }
 
     @PostMapping("messages") //DONE
-    public ResponseEntity<Message> createMessage(@RequestBody Message newMessage) {
-        Message message = messageService.createMessage(newMessage);
-        if (message == null) {
+    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
+        Message newMessage = messageService.createMessage(message);
+        if (newMessage == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(message);
+        return ResponseEntity.status(HttpStatus.OK).body(newMessage);
     }
 
     @GetMapping("messages") //DONE
@@ -69,7 +69,7 @@ public class SocialMediaController {
     }
 
     @GetMapping("messages/{message_id}") //DONE
-    public ResponseEntity<Message> findMessageById(@PathVariable int message_id) {
+    public ResponseEntity<Message> findMessageById(@PathVariable Integer message_id) {
         try {
             Message foundMessage = messageService.findMessageById(message_id);
             return ResponseEntity.status(HttpStatus.OK).body(foundMessage);
@@ -80,17 +80,20 @@ public class SocialMediaController {
         }
     }
 
-    @DeleteMapping("messages/{message_id}") //6
-    public ResponseEntity<Integer> deleteMessageById(@PathVariable int message_id) {
-        Message deletedMessage = messageService.deleteMessageById(message_id);
-        if (deletedMessage == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    @DeleteMapping("messages/{message_id}") //DONE
+    public ResponseEntity<Integer> deleteMessageById(@PathVariable Integer message_id) {
+        try {
+            messageService.deleteMessageById(message_id);
+            return ResponseEntity.status(HttpStatus.OK).body(1);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(1);
+
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
     }
 
     @PatchMapping("messages/{message_id}") //DONE
-    public ResponseEntity<Integer> updateMessageById(@PathVariable int message_id, @RequestBody Message message) {
+    public ResponseEntity<Integer> updateMessageById(@PathVariable Integer message_id, @RequestBody Message message) {
         Message updatedMessage = messageService.updateMessageById(message_id, message);
         if (updatedMessage == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -99,8 +102,11 @@ public class SocialMediaController {
     }
     
     @GetMapping("accounts/{account_id}/messages") //8
-    public ResponseEntity<List<Message>> getAllMessagesByAccountId(@PathVariable int account_id) {
+    public ResponseEntity<List<Message>> getAllMessagesByAccountId(@PathVariable Integer account_id) {
         List<Message> accountMessageList = messageService.getAllMessagesByAccountId(account_id);
+        if (accountMessageList == null) {
+            return null;
+        }
         return ResponseEntity.status(HttpStatus.OK).body(accountMessageList);
     }
 }

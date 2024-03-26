@@ -24,16 +24,16 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
-    public Message findMessageById(int message_id) throws ResourceNotFoundException {
+    public Message findMessageById(Integer message_id) throws ResourceNotFoundException {
         return messageRepository.findById(message_id).orElseThrow(() -> new ResourceNotFoundException(message_id + " was not found."));
     }
 
-    public List<Message> getAllMessagesByAccountId(int posted_by) throws ResourceNotFoundException {
-        Optional<Account> id = accountRepository.findById(posted_by);
-        if (id.isEmpty()) {
+    public List<Message> getAllMessagesByAccountId(int posted_by) {
+        if (posted_by == 0) {
             return null;
         }
-        return null;
+        List<Message> messages = messageRepository.findAll();
+        return messages;
     }
 
     public Message createMessage(Message message) {
@@ -44,7 +44,7 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public Message updateMessageById(int message_id, Message message) {
+    public Message updateMessageById(Integer message_id, Message message) {
         Optional<Message> id = messageRepository.findById(message_id);
         if ((message == null) || (message.getMessage_text().isEmpty()) || (message.getMessage_text().length() > 255) || (id.isEmpty())) {
             return null;
@@ -52,11 +52,10 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public Message deleteMessageById(int message_id) {
-        Optional<Message> id = messageRepository.findById(message_id);
-        if (id.isEmpty()) {
-            return null;
+    public void deleteMessageById(Integer message_id) throws Exception {
+        if (message_id == null) {
+            throw new Exception();
         }
-        return null;
+        messageRepository.deleteById(message_id);
     }
 }
