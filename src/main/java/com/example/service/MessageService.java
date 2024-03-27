@@ -39,9 +39,6 @@ public class MessageService {
     }
 
     public List<Message> getAllMessagesByAccountId(Integer posted_by) {
-        if (posted_by == null) {
-            return null;
-        }
         return messageRepository.findAll();
     }
 
