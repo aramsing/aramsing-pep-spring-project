@@ -31,81 +31,82 @@ public class SocialMediaController {
     @PostMapping("register") //DONE
     public ResponseEntity<Account> registerAccount(@RequestBody Account account) {
         try {
-            Account newAccount = accountService.registerAccount(account);
-            return ResponseEntity.status(HttpStatus.OK).body(newAccount);
+            Account newAccount = accountService.registerAccount(account); // create the account
+            return ResponseEntity.status(HttpStatus.OK).body(newAccount); // return 200
         }
         
-        catch (DuplicateUsernameException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        catch (DuplicateUsernameException e) { // if the program catch a duplicate username
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // return 409
         }
     }
 
     @PostMapping("login") //DONE
     public ResponseEntity<Account> loginAccount(@RequestBody Account account) {
         try {
-            Account loggedinAccount = accountService.loginAccount(account);
-            return ResponseEntity.status(HttpStatus.OK).body(loggedinAccount);
+            Account loggedinAccount = accountService.loginAccount(account); // log into the account
+            return ResponseEntity.status(HttpStatus.OK).body(loggedinAccount); // return 200
         }
         
-        catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        catch (AuthenticationException e) { // if the user entered the wrong credentials
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // return 401
         }
     }
 
     @PostMapping("messages") //DONE
     public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        Message newMessage = messageService.createMessage(message);
-        if (newMessage == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        Message newMessage = messageService.createMessage(message); // create the message
+
+        if (newMessage == null) { // if the message is null
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // return 400
         }
-        return ResponseEntity.status(HttpStatus.OK).body(newMessage);
+
+        return ResponseEntity.status(HttpStatus.OK).body(newMessage); // return 200
     }
 
     @GetMapping("messages") //DONE
     public ResponseEntity<List<Message>> getAllMessages() {
-        List<Message> messages = messageService.getAllMessages();
-        return ResponseEntity.status(HttpStatus.OK).body(messages);
+        List<Message> messages = messageService.getAllMessages(); // get every message currently in the database
+        return ResponseEntity.status(HttpStatus.OK).body(messages); // return 200
     }
 
     @GetMapping("messages/{message_id}") //DONE
     public ResponseEntity<Message> getMessageById(@PathVariable Integer message_id) {
         try {
-            Message foundMessage = messageService.getMessageById(message_id);
-            return ResponseEntity.status(HttpStatus.OK).body(foundMessage);
+            Message foundMessage = messageService.getMessageById(message_id); // get the individual message from the database
+            return ResponseEntity.status(HttpStatus.OK).body(foundMessage); // return 200
         }
 
-        catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+        catch (ResourceNotFoundException e) { // if we are not able to find the resource
+            return ResponseEntity.status(HttpStatus.OK).body(null); // return 200
         }
     }
 
     @DeleteMapping("messages/{message_id}") //DONE
     public ResponseEntity<Integer> deleteMessageById(@PathVariable Integer message_id) {
         try {
-            messageService.deleteMessageById(message_id);
-            return ResponseEntity.status(HttpStatus.OK).body(1);
+            messageService.deleteMessageById(message_id); // delete the message from the database
+            return ResponseEntity.status(HttpStatus.OK).body(1); // return 200
         }
 
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+        catch (Exception e) { // if the message does not exist
+            return ResponseEntity.status(HttpStatus.OK).body(null); // return 200
         }
     }
 
     @PatchMapping("messages/{message_id}") //DONE
     public ResponseEntity<Integer> updateMessageById(@PathVariable Integer message_id, @RequestBody Message message) {
-        Message updatedMessage = messageService.updateMessageById(message_id, message);
-        if (updatedMessage == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        Message updatedMessage = messageService.updateMessageById(message_id, message); // update the message in the database
+
+        if (updatedMessage == null) { // if the message does not exist
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // return 400
         }
-        return ResponseEntity.status(HttpStatus.OK).body(1);
+
+        return ResponseEntity.status(HttpStatus.OK).body(1); // return 200
     }
     
-    @GetMapping("accounts/{account_id}/messages") //8
-    public ResponseEntity<List<Message>> getAllMessagesByAccountId(@PathVariable Integer account_id) {
-        List<Message> messagesFromAccount = messageService.getAllMessagesByAccountId(account_id);
-        if (messagesFromAccount.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(messagesFromAccount);
+    @GetMapping("accounts/{account_id}/messages") //DONE
+    public ResponseEntity<List<Message>> getAllMessagesByAccountId(@PathVariable List<Integer> account_id) {
+        List<Message> messagesFromAccount = messageService.getAllMessagesByAccountId(account_id); // get all messages written by a user from the database
+        return ResponseEntity.status(HttpStatus.OK).body(messagesFromAccount); // return 200
     }
 }

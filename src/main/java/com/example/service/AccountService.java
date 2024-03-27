@@ -18,25 +18,25 @@ public class AccountService {
     }
 
     public Account registerAccount(Account newAccount) throws DuplicateUsernameException {
-        if ((newAccount.getUsername() == "") || (newAccount.getPassword().length() < 4)) {
+        if ((newAccount.getUsername() == "") || (newAccount.getPassword().length() < 4)) { // if the username is empty or the length of the password is less than 4, then return null
             return null;
         }
 
-        if (accountRepository.existsByUsername(newAccount.getUsername())) {
+        if (accountRepository.existsByUsername(newAccount.getUsername())) { // if the user name exists already, return exception
             throw new DuplicateUsernameException("This username already exists.");
         }
 
-        return accountRepository.save(newAccount);
+        return accountRepository.save(newAccount); // write the new account to the database
     }
 
     public Account loginAccount(Account account) throws AuthenticationException {
-        Account storedAccount = accountRepository.findByUsernameAndPassword(account.getUsername(), account.getPassword());
+        Account storedAccount = accountRepository.findByUsernameAndPassword(account.getUsername(), account.getPassword()); // find the account
 
-        if (storedAccount == null) {
+        if (storedAccount == null) { // if the account is not there, whether by login error or otherwise throw an exception
             throw new AuthenticationException("Invalid account");
         }
         
-        storedAccount.getAccount_id();
-        return storedAccount;
+        storedAccount.getAccount_id(); // get the account id
+        return storedAccount; // get the complete account
     }
 }
